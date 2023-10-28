@@ -1,16 +1,22 @@
-# This is a sample Python script.
+import pandas as pd
+import numpy as np
+import wfdb
+import ast
+from tqdm import tqdm
+import warnings
+from manage_data import *
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+warnings.filterwarnings('ignore')
+from IPython.display import display
+
+import matplotlib.pyplot as plt
+# %matplotlib inline
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    path = 'C:/Users/user/Documents/Python/HCM_finder/input/ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.3/'
+    sampling_rate = 100
+    #load_and_convert_data(path, sampling_rate)
+    #load_data_for_diagnostics(path)
+    reformat_data_for_EDA(path, sampling_rate)
