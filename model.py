@@ -1,8 +1,5 @@
 import ast
-import itertools
-import os
 import sys
-from sre_parse import CATEGORIES
 
 import numpy as np
 import pandas as pd
@@ -23,8 +20,7 @@ import seaborn as sns
 
 def load_raw_data(data_file, sampling_rate, path):
     if sampling_rate == 100:
-        data = [wfdb.rdsamp(path + f) for f in
-                tqdm(data_file.filename_lr)]  # tqdm - biblioteka pokazujaca pasek progressu w konsoli
+        data = [wfdb.rdsamp(path + f) for f in tqdm(data_file.filename_lr)]  # tqdm - biblioteka pokazujaca pasek progressu w konsoli
     else:
         data = [wfdb.rdsamp(path + f) for f in tqdm(data_file.filename_hr)]
 
@@ -117,7 +113,7 @@ def read_data_from_npz(npz_path):
 def cnnmodel():
     model = Sequential()
 
-    model.add(Conv1D(filters=5, kernel_size=3, strides=1, input_shape=(1000, 12)))  # 1
+    model.add(Conv1D(filters=5, kernel_size=3, strides=1, input_shape=(1000, 12)))
     model.add(BatchNormalization())
     model.add(LeakyReLU())
     model.add(MaxPool1D(pool_size=2, strides=2))
@@ -215,8 +211,6 @@ class NDStandardScaler(TransformerMixin):
 
     def fit(self, X, **kwargs):
         X = np.array(X)
-        # Save the original shape to reshape the flattened X later
-        # back to its original shape
         if len(X.shape) > 1:
             self._orig_shape = X.shape[1:]
         X = self._flatten(X)
@@ -231,14 +225,12 @@ class NDStandardScaler(TransformerMixin):
         return X
 
     def _flatten(self, X):
-        # Reshape X to <= 2 dimensions
         if len(X.shape) > 2:
             n_dims = np.prod(self._orig_shape)
             X = X.reshape(-1, n_dims)
         return X
 
     def _reshape(self, X):
-        # Reshape X back to it's original shape
         if len(X.shape) >= 2:
             X = X.reshape(-1, *self._orig_shape)
         return X
@@ -277,8 +269,8 @@ def mmain():
     callback = [early, reducelr]
 
     # trening danych
-    model = cnnmodel()
-    model.compile(optimizer=optimizers.Adam(learning_rate=0.0005), loss=losses.BinaryCrossentropy(), \
+    model = cnnmodel2()
+    model.compile(optimizer=optimizers.Adam(learning_rate=0.0005), loss=losses.BinaryCrossentropy(),
                   metrics=[metrics.BinaryAccuracy(), metrics.AUC(curve='ROC', multi_label=True)])
 
     history = model.fit(x=x_train, y=Y_train, epochs=100, batch_size=32, callbacks=callback,
